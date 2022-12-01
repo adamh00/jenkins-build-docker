@@ -1,11 +1,15 @@
 node {
+  def app
+  
     stage('Clone') {
-        git 'https://github.com/adamh00/Adams.git'
+        checkout scm
     }
-    stage('Build') {
-        sh 'javac Main.java'
+    stage('Build image') {
+        app= docker.build("Adam/nginx")
     }
-    stage('Run') {
-        sh 'java Main'
+    stage('Run image') {
+        docker.image("Adam/nginx").withRun('-p 80:80') { c ->
+        sh 'docker ps'
+        sh 'curl localhost'
     }
 }
